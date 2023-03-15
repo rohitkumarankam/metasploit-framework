@@ -52,6 +52,14 @@ module Metasploit
           #   @return [Integer] Maximum errors allowed
           attr_accessor :max_error_count
 
+          # @param attributes [Hash{Symbol => String,nil}]
+          def initialize(attributes={})
+            attributes.each do |attribute, value|
+              public_send("#{attribute}=", value)
+            end
+            set_sane_defaults
+          end
+          
           validates :max_consecutive_error_count,
                     presence: true,
                     numericality: {
@@ -93,14 +101,6 @@ module Metasploit
           validate :host_address_must_be_valid
 
           validate :validate_cred_details
-
-          # @param attributes [Hash{Symbol => String,nil}]
-          def initialize(attributes={})
-            attributes.each do |attribute, value|
-              public_send("#{attribute}=", value)
-            end
-            set_sane_defaults
-          end
 
           # Attempt a single login against the service with the given
           # {Credential credential}.
